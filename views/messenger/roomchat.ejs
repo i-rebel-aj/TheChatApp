@@ -1,0 +1,128 @@
+<%- include("../partials/header")%>
+<style>
+/*=================================================
+    MessageBox
+===================================================*/
+.chatlist{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chatlist .chatitem{
+  display:inline-block;
+  clear: both;
+  padding: 20px;
+  border-radius: 30px;
+  margin-bottom: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.him{
+  background: #eee;
+  float: left;
+}
+.me{
+  float: right;
+  background: #0084ff;
+  color: #fff;
+}
+.him + .me{
+  border-bottom-right-radius: 5px;
+}
+
+.me + .me{
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.me:last-of-type {
+  border-bottom-right-radius: 30px;
+}
+form{
+    margin-left: 40%;
+}
+</style>
+<!-- Page Content  -->
+<div class="container">
+    <div id="content">
+        <h3>You are in the Room as <%=currentUser.Name%></h3>
+        <div class="container">
+        <ul id="messages" class="chatlist">
+            <%history.forEach(function(msg){%>
+                <%if(msg.author.Username===currentUser.Username){%>
+                    <li class="me chatitem"><%=msg.text%></li>
+                <%}else if(msg.receiver.Username!==undefined){console.log(msg.receiver.Username)%>
+                    <li class="him chatitem"><strong>By <%=msg.author.Username%> (Private)</strong> <br><%=msg.text%></li>
+                <%}else if(msg.receiver.Username===undefined){%>
+                    <li class="him chatitem"><strong>This Was Broadcast:-</strong><br><%=msg.text%></li>
+                <%}%>
+            <%})%>
+        </ul>
+        <form action="" method="" class="fixed-bottom w-100">
+            <input type="text" id="m" placeholder="your message" required>
+            <button class="btn-success btn-sm" id="submit">Send</button>
+        </form>
+        </div>
+    </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+var LoggedInSocket = "<%=currentUser.Username%>";
+
+var socket = io();
+/*========================================
+Saying to server, Hey! I am logged in  
+==========================================*/
+//EveryOne Joined The Room 
+socket.emit('create', 'room1');
+socket.emit('come_online', LoggedInSocket);
+$(function () {
+$('form').submit(function(e){
+  e.preventDefault(); // prevents page reloading
+  //Parse The Text
+  var str=$('#m').val();
+  var ToUsername;
+  if(str.indexOf("@")===-1){
+    //Broadcast The message
+    socket.emit("broadcastroom1", str,null, LoggedInSocket);
+    $('#m').val('');
+  }else{
+    var mySubString = str.substring(str.indexOf("@")+1);
+    console.log(mySubString);
+    if(mySubString.indexOf(" ")!==-1){
+        ToUsername = mySubString.substring(0,mySubString.indexOf(" "));
+    }else{
+        ToUsername=mySubString;
+    }
+    //Send message only to the user
+    socket.emit("room1pm", str,ToUsername,LoggedInSocket);
+    $('#m').val('');
+  }
+  return false;
+});
+    socket.on('broadcastroom1', function(msg, from,to){
+        console.log("Message received from server From:-"+from);
+    //So that message from other user are not displayed on chatscreen.
+    if(from===LoggedInSocket){
+        console.log("Yahan kuch aaya (if)");
+        //var message=msg +" sent by "+from;
+        $('#messages').append($('<li class="me chatitem">').text(msg));
+    }else {
+        console.log("Yahan kuch aaya (else)");
+        console.log(to);
+        console.log(from);
+        if(to===null){
+            $('#messages').append($('<li class="him chatitem">').text(msg));
+        }else{
+            //$('#messages').append($("<li class=him chatitem>Private Message From "+from+"<br>"+msg+"</li>"));
+            $('#messages').append($('<li class="him chatitem">').text(msg));
+        }
+        
+    }
+});
+});
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

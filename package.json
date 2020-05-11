@@ -1,0 +1,25 @@
+{
+  "name": "chat-application",
+  "version": "1.0.0",
+  "description": "This is chat app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Akshay Jain",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.5",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "flash": "^1.1.0",
+    "http": "0.0.1-security",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.8.7",
+    "socket.io": "^2.3.0"
+  }
+}

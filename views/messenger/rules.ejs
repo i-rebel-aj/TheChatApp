@@ -1,0 +1,20 @@
+<%- include("../partials/header")%>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+          How This App Works
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">There Are Two Options, Chatting in a room and Personal Chat</li>
+                <li class="list-group-item">Personal Chat is simple (There is a list of users, choose and chat)</li>
+                <li class="list-group-item">In room any message you send will be viewed by all the users</li>
+                <li class="list-group-item">If in your message if there is anywhere @"Username" then that message will be visible only to you and the other Person (Only Single username should be mentioned)</li>
+            </ul>
+            <br>
+            <a href="/chat/<%=currentUser._id%>" class="btn btn-primary">Personal Chat</a>
+            <a href="/chat/room/<%=currentUser._id%>" class="btn btn-primary">Room</a>
+        </div>
+      </div>
+</div>
+<%-include("../partials/footer")%>
