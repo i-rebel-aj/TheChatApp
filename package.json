@@ -20,6 +20,6 @@
     "http": "0.0.1-security",
     "method-override": "^3.0.0",
     "mongoose": "^5.8.7",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.5.0"
   }
 }
